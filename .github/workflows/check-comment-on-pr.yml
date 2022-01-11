@@ -13,12 +13,15 @@ jobs:
     if: github.event.review.state == 'approved' && github.event.pull_request.base.ref == 'qa'
     steps:
       - name: Find last comment
-        id: fc
+        id: find-last-comment
         uses: peter-evans/find-comment@v1
         with:
           issue-number: ${{github.event.pull_request.number}}
           body-includes: 'approved'
-      - run: |
-          echo ${{ steps.fc.outputs.comment-id }}
-          echo ${{ steps.fc.outputs.comment-body }}
-          echo ${{ steps.fc.outputs.comment-author }}
+
+      - name: Comment
+        if: steps.find-last-comment.outputs.comment-id == ''
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{github.event.pull_request.number}}
+          body: "Change for master is approved!! Merge it carefully."
