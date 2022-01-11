@@ -9,6 +9,7 @@ jobs:
     steps:
       - run: echo "Hello world !"
   check-state:
+    runs-on: ubuntu-latest
     if: github.event.review.state == 'approved' && github.event.pull_request.base.ref == 'qa'
     steps:
       - name: Find last comment
