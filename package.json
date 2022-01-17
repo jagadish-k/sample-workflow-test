@@ -1,5 +1,5 @@
 {
-  "name": "@cleartax/deployment-workflow-frontend",
+  "name": "sample-workflow-test",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
@@ -9,15 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ClearTax/deployment-workflow-frontend.git"
+    "url": "git+https://github.com/jagadish-k/sample-workflow-test.git"
   },
   "keywords": [],
   "author": "Jagadish, K.",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ClearTax/deployment-workflow-frontend/issues"
+    "url": "https://github.com/jagadish-k/sample-workflow-test/issues"
   },
-  "homepage": "https://github.com/ClearTax/deployment-workflow-frontend#readme",
+  "homepage": "https://github.com/jagadish-k/sample-workflow-test#readme",
   "devDependencies": {
     "@babel/cli": "^7.16.7",
     "@babel/core": "^7.16.7",

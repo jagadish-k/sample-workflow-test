@@ -19,62 +19,62 @@ jobs:
           repo-token-user-login: 'github-actions[bot]'
           allow-repeats: true
       
-  build-n-upload:
-    runs-on: ubuntu-latest
-    needs: add-pr-comment-before-build
-    strategy: 
-      matrix:
-        APP_ENV: ['development', 'qa', 'pre-prod', 'demo', 'production']
-    steps:
-      - uses: actions/checkout@v2
-      - name: Declare some variables
-        id: vars
-        shell: bash
-        run: |
-          echo "::set-output name=artifact::$(echo build-${{ matrix.APP_ENV }}-$(git rev-parse --short HEAD).zip)"
+  # build-n-upload:
+  #   runs-on: ubuntu-latest
+  #   needs: add-pr-comment-before-build
+  #   strategy: 
+  #     matrix:
+  #       APP_ENV: ['development', 'qa', 'pre-prod', 'demo', 'production']
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Declare some variables
+  #       id: vars
+  #       shell: bash
+  #       run: |
+  #         echo "::set-output name=artifact::$(echo build-${{ matrix.APP_ENV }}-$(git rev-parse --short HEAD).zip)"
 
-      - name: 'Set env variable for proper substitution.'
-        run: |
-          echo "APP_ENV=${{ matrix.APP_ENV }}" >> "$GITHUB_ENV"
-          echo "ARTIFACT_NAME=${{ steps.vars.outputs.artifact }}" >> "$GITHUB_ENV"
+  #     - name: 'Set env variable for proper substitution.'
+  #       run: |
+  #         echo "APP_ENV=${{ matrix.APP_ENV }}" >> "$GITHUB_ENV"
+  #         echo "ARTIFACT_NAME=${{ steps.vars.outputs.artifact }}" >> "$GITHUB_ENV"
 
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-          cache: 'yarn'
-      - run: yarn
-      - run: yarn build
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: '16'
+  #         cache: 'yarn'
+  #     - run: yarn
+  #     - run: yarn build
         
-      - name: 'Zip Build Folder'
-        uses: montudor/action-zip@v1
-        with:
-          args: zip -qq -r ${{ env.ARTIFACT_NAME }} build
+  #     - name: 'Zip Build Folder'
+  #       uses: montudor/action-zip@v1
+  #       with:
+  #         args: zip -qq -r ${{ env.ARTIFACT_NAME }} build
           
-      - name: Upload artifact
-        uses: jagadish-k/artifactory-upload-s3@v1.1.1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          s3-bucket: ${{ secrets.S3_ARTIFACTORY_BUCKET }}
-          artifact: ${{ env.ARTIFACT_NAME }}
-          app-name: ${{ env.app_name }}
-          destination-dir: ${{ env.destination_dir }}
+  #     - name: Upload artifact
+  #       uses: jagadish-k/artifactory-upload-s3@v1.1.1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         s3-bucket: ${{ secrets.S3_ARTIFACTORY_BUCKET }}
+  #         artifact: ${{ env.ARTIFACT_NAME }}
+  #         app-name: ${{ env.app_name }}
+  #         destination-dir: ${{ env.destination_dir }}
 
-      # - uses: mshick/add-pr-comment@v1
-      #   with:
-      #     message: |
-      #       Build complete. '${{ env.ARTIFACT_NAME }}' uploaded to Artifactory.
-      #     repo-token: ${{ secrets.GITHUB_TOKEN }}
-      #     repo-token-user-login: 'github-actions[bot]'
-      #     allow-repeats: true
+  #     # - uses: mshick/add-pr-comment@v1
+  #     #   with:
+  #     #     message: |
+  #     #       Build complete. '${{ env.ARTIFACT_NAME }}' uploaded to Artifactory.
+  #     #     repo-token: ${{ secrets.GITHUB_TOKEN }}
+  #     #     repo-token-user-login: 'github-actions[bot]'
+  #     #     allow-repeats: true
 
-  add-pr-comment-after-build:
-    runs-on: ubuntu-latest
-    needs: build-n-upload
-    steps:
-      - uses: mshick/add-pr-comment@v1
-        with:
-          message: 'The artifacts have been built. QA can now deploy the PR artifact to QA for verification'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          repo-token-user-login: 'github-actions[bot]'
-          allow-repeats: true
+  # add-pr-comment-after-build:
+  #   runs-on: ubuntu-latest
+  #   needs: build-n-upload
+  #   steps:
+  #     - uses: mshick/add-pr-comment@v1
+  #       with:
+  #         message: 'The artifacts have been built. QA can now deploy the PR artifact to QA for verification'
+  #         repo-token: ${{ secrets.GITHUB_TOKEN }}
+  #         repo-token-user-login: 'github-actions[bot]'
+  #         allow-repeats: true
