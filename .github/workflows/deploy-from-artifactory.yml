@@ -12,9 +12,14 @@ on:
       
       environment:
         description: 'Which environment to be deployed'
-        required: true
+        type: choice
+        options: 
+        - qa
+        - preprod
+        - demo
+        - prod
 jobs:
   echo-parameters:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Deploying $APP_NAME v$ARTIFACT to $environment"
+      - run: echo "Deploying ${{ github.event.inputs.app-name }} v${{ github.event.inputs.artifact }} to ${{ github.event.inputs.environment }}"
