@@ -17,5 +17,4 @@ jobs:
   echo-parameters:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo "Deploying $APP_NAME v$ARTIFACT to $environment"
+      - run: echo "Deploying $APP_NAME v$ARTIFACT to $environment"
