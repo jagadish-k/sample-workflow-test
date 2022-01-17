@@ -25,3 +25,53 @@ jobs:
         with:
           issue-number: ${{github.event.pull_request.number}}
           body: "Change for master is approved!! Merge it carefully."
+          
+  build-n-upload:
+    runs-on: ubuntu-latest
+    needs: check-state
+    strategy: 
+      matrix:
+        APP_ENV: ['pre-prod', 'demo', 'production']
+    steps:
+      - uses: actions/checkout@v2
+      - name: Declare some variables
+        id: vars
+        shell: bash
+        run: |
+          echo "::set-output name=artifact::$(echo build-${{ matrix.APP_ENV }}-$(git rev-parse --short HEAD).zip)"
+
+      - name: 'Set env variable for proper substitution.'
+        run: |
+          echo "APP_ENV=${{ matrix.APP_ENV }}" >> "$GITHUB_ENV"
+          echo "ARTIFACT_NAME=${{ steps.vars.outputs.artifact }}" >> "$GITHUB_ENV"
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'yarn'
+      - run: yarn
+      - run: yarn build
+        
+      - name: 'Zip Build Folder'
+        uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r ${{ env.ARTIFACT_NAME }} build
+
+      # - uses: mshick/add-pr-comment@v1
+      #   with:
+      #     message: |
+      #       Build complete. '${{ env.ARTIFACT_NAME }}' uploaded to Artifactory.
+      #     repo-token: ${{ secrets.GITHUB_TOKEN }}
+      #     repo-token-user-login: 'github-actions[bot]'
+      #     allow-repeats: true
+
+  add-pr-comment-after-build:
+    runs-on: ubuntu-latest
+    needs: build-n-upload
+    steps:
+      - uses: mshick/add-pr-comment@v1
+        with:
+          message: 'The artifacts have been built. QA can now deploy the PR artifact to QA for verification'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: 'github-actions[bot]'
+          allow-repeats: true
