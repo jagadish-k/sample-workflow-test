@@ -18,6 +18,7 @@ jobs:
         with:
           issue-number: ${{github.event.pull_request.number}}
           body-includes: 'approved'
+          direction: last
 
       - name: Comment
         if: steps.find-last-comment.outputs.comment-id == ''
@@ -25,7 +26,7 @@ jobs:
         with:
           issue-number: ${{github.event.pull_request.number}}
           body: "Change for master is approved!! Merge it carefully."
-          
+
   build-n-upload:
     runs-on: ubuntu-latest
     needs: check-state
