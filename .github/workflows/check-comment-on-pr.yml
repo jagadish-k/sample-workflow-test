@@ -70,7 +70,7 @@ jobs:
     steps:
       - name: Get current date
         id: date
-        run: echo "::set-output time=date::$(date +'%Y-%m-%d-%H-%M-%S')"
+        run: echo "::set-output name=time::$(date +'%Y-%m-%d-%H-%M-%S')"
 
       - uses: mshick/add-pr-comment@v1
         with:
