@@ -15,20 +15,13 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: 'approved'
           direction: last
-      - name: Echo comment id
-        if: steps.find-last-comment.outputs.comment-id != ''
-        env:
-          CID: ${{ steps.find-last-comment.outputs.comment-id }}
-          PNO: ${{ github.event.pull_request.number }}
-        run: |
-        echo "Found comment for ${{env.PNO}}: ${{env.CID}}"
       
       - name: Comment
-        if: steps.find-last-comment.outputs.comment-id == ''
+        if: steps.find-last-comment.outputs.comment-id != ''
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          body: "Change for master is approved!! Merge it carefully."
+          body: "Change for master is approved!! Merge it carefully. ${{ steps.find-last-comment.comment-author }}"
 
   build-n-upload:
     runs-on: ubuntu-latest
