@@ -4,10 +4,6 @@ on:
     types: [submitted]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Hello world !"
   check-state:
     runs-on: ubuntu-latest
     if: github.event.review.state == 'approved' && github.event.pull_request.base.ref == 'qa'
@@ -72,9 +68,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-n-upload
     steps:
+      - name: Get current date
+        id: date
+        run: echo "::set-output time=date::$(date +'%Y-%m-%d-%H-%M-%S')"
+
       - uses: mshick/add-pr-comment@v1
         with:
-          message: 'The artifacts have been built. QA can now deploy the PR artifact to QA for verification'
+          message: 'The artifacts have been built. QA can now deploy the PR artifact to QA for verification at ${{ steps.date.output.time}}'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'
           allow-repeats: true
