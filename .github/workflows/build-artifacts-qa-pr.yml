@@ -12,9 +12,22 @@ jobs:
   add-pr-comment-before-build:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/github-script@v5
+        id: set-result
+        with:
+          script: |
+            const reviews = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+            });
+            console.log(reviews);
+
+          result-encoding: string
+
       - uses: mshick/add-pr-comment@v1
         with:
-          message: 'Start building artifacts for all environments and upload them to Artifactory.'
+          message: 'Start building artifacts for QA environments and upload them to Artifactory.'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'
           allow-repeats: true

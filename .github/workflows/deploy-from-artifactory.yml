@@ -1,4 +1,5 @@
 name: "Deploy Artifact from Artifactory"
+
 on:
   workflow_dispatch:
     inputs:
@@ -10,12 +11,17 @@ on:
         description: 'artifact version to be deployed'
         required: true
       
-      environment:
+      environ:
+        type: choice
         description: 'Which environment to be deployed'
-        required: true
+        options: 
+        - qa
+        - preprod
+        - demo
+        - prod
+
 jobs:
   echo-parameters:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo "Deploying $APP_NAME v$ARTIFACT to $environment"
+      - run: echo "Deploying ${{ github.event.inputs.app-name }} v${{ github.event.inputs.artifact }} to ${{ github.event.inputs.environ }}"
