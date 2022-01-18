@@ -16,15 +16,16 @@ jobs:
         id: find-last-comment
         uses: peter-evans/find-comment@v1
         with:
-          issue-number: ${{github.event.pull_request.number}}
+          issue-number: ${{ github.event.pull_request.number }}
           body-includes: 'approved'
           direction: last
-
+      - name: Echo comment id
+        run: echo "Found comment for ${{ github.event.pull_request.number }}: ${{ steps.find-last-comment.outputs.comment-id }}"
       - name: Comment
         if: steps.find-last-comment.outputs.comment-id == ''
         uses: peter-evans/create-or-update-comment@v1
         with:
-          issue-number: ${{github.event.pull_request.number}}
+          issue-number: ${{ github.event.pull_request.number }}
           body: "Change for master is approved!! Merge it carefully."
 
   build-n-upload:
