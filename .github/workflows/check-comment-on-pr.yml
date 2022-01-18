@@ -21,7 +21,7 @@ jobs:
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          body: "Change for master is approved!! Merge it carefully. ${{ steps.find-last-comment.comment-author }}"
+          body: "Change for master is approved!! Merge it carefully. ${{ steps.find-last-comment.outputs.comment-author }}"
 
   build-n-upload:
     runs-on: ubuntu-latest
