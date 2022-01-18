@@ -8,6 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.review.state == 'approved' && github.event.pull_request.base.ref == 'qa'
     steps:
+      - name: Has PR Been approved ?
+        if: ${{ github.event.review.state == 'approved' }}
+        run: |
+        echo "This PR ${{ github.event.pull_request }} has been approved."
       - name: Find last comment
         id: find-last-comment
         uses: peter-evans/find-comment@v1
@@ -15,13 +19,20 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: 'approved'
           direction: last
-      
-      - name: Comment
+          
+      - name: 
         if: steps.find-last-comment.outputs.comment-id != ''
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          body: "Change for master is approved!! Merge it carefully. ${{ steps.find-last-comment.outputs.comment-author }}"
+          body: "Change has been approved by ${{ steps.find-last-comment.outputs.comment-author }} on QA"
+      
+      - name: Comment
+        if: steps.find-last-comment.outputs.comment-id == ''
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: "Change for master is approved!! Merge it carefully."
 
   build-n-upload:
     runs-on: ubuntu-latest
