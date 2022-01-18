@@ -2,7 +2,7 @@ name: "Build Artifacts when PR is raised for QA"
 on:
   pull_request:
     branches:
-      - qa
+      - main
 
 env:
   app_name: 'sample-frontend'
