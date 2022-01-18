@@ -21,7 +21,7 @@ jobs:
           CID: ${{ steps.find-last-comment.outputs.comment-id }}
           PNO: ${{ github.event.pull_request.number }}
         run: |
-        echo "Found comment for $PNO: $CID"
+        echo "Found comment for ${{env.PNO}}: ${{env.CID}}"
       
       - name: Comment
         if: steps.find-last-comment.outputs.comment-id == ''
