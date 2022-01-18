@@ -16,15 +16,12 @@ jobs:
         id: set-result
         with:
           script: |
-            console.log(context);
             const reviews = await github.rest.pulls.listReviews({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: context.payload.pull_request.id,
+              pull_number: context.payload.pull_request.number,
             });
-            console.log(reviews[0].id)
-            console.log(reviews[0].state);
-            console.log(reviews.length);
+            console.log(reviews);
 
           result-encoding: string
 
