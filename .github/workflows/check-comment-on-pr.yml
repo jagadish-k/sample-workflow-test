@@ -19,9 +19,9 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: 'approved'
           direction: last
-      - name: Echo comment id
-        run: |
-        echo "Found comment for ${{ github.event.pull_request.number }}: ${{ steps.find-last-comment.outputs.comment-id }}"
+      # - name: Echo comment id
+      #   run: |
+      #   echo "Found comment for ${{ github.event.pull_request.number }}: ${{ steps.find-last-comment.outputs.comment-id }}"
       - name: Comment
         if: steps.find-last-comment.outputs.comment-id == ''
         uses: peter-evans/create-or-update-comment@v1
