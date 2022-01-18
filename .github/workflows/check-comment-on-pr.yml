@@ -11,7 +11,7 @@ jobs:
       - name: Has PR Been approved ?
         if: ${{ github.event.review.state == 'approved' }}
         run: |
-        echo "This PR ${{ github.event.pull_request }} has been approved."
+          echo "This PR ${{ github.event.pull_request }} has been approved."
       - name: Find last comment
         id: find-last-comment
         uses: peter-evans/find-comment@v1
